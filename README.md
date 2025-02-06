@@ -1,2 +1,2 @@
-# smart-helmet
-Smart Helmet System
+# helmet-sense
+HelmetSense System
