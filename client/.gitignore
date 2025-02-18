@@ -41,6 +41,10 @@ Thumbs.db
 .nx/cache
 .nx/workspace-data
 
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
+test-output
+
 # React Native
 
 # OSX
@@ -109,6 +113,3 @@ yarn-error.log
 
 # testing
 /coverage
-vite.config.*.timestamp*
-vitest.config.*.timestamp*
-test-output

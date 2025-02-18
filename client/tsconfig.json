@@ -4,13 +4,19 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/mobile"
-    },
-    {
       "path": "./apps/web-e2e"
     },
     {
       "path": "./apps/web"
+    },
+    {
+      "path": "./packages/shared-types"
+    },
+    {
+      "path": "./apps/mobile"
+    },
+    {
+      "path": "./packages/shared-ui"
     }
   ]
 }

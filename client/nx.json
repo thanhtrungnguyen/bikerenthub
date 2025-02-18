@@ -16,12 +16,9 @@
       "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": [
-      "{workspaceRoot}/.github/workflows/ci.yml",
-      "{workspaceRoot}/.circleci/config.yml"
-    ]
+    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
-  "nxCloudId": "67b4b377392a2c346a95bdd0",
+  "nxCloudId": "67b4bde9853c3742073d3cf3",
   "plugins": [
     {
       "plugin": "@nx/js/typescript",
@@ -35,20 +32,6 @@
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
         }
-      }
-    },
-    {
-      "plugin": "@nx/react-native/plugin",
-      "options": {
-        "startTargetName": "start",
-        "upgradeTargetName": "update",
-        "bundleTargetName": "bundle",
-        "podInstallTargetName": "pod-install",
-        "runIosTargetName": "run-ios",
-        "runAndroidTargetName": "run-android",
-        "buildIosTargetName": "build-ios",
-        "buildAndroidTargetName": "build-android",
-        "syncDepsTargetName": "sync-deps"
       }
     },
     {
@@ -85,6 +68,20 @@
       "options": {
         "targetName": "test"
       }
+    },
+    {
+      "plugin": "@nx/react-native/plugin",
+      "options": {
+        "startTargetName": "start",
+        "upgradeTargetName": "update",
+        "bundleTargetName": "bundle",
+        "podInstallTargetName": "pod-install",
+        "runIosTargetName": "run-ios",
+        "runAndroidTargetName": "run-android",
+        "buildIosTargetName": "build-ios",
+        "buildAndroidTargetName": "build-android",
+        "syncDepsTargetName": "sync-deps"
+      }
     }
   ],
   "targetDefaults": {
@@ -93,6 +90,11 @@
     },
     "test": {
       "dependsOn": ["^build"]
+    },
+    "@nx/js:tsc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "generators": {
