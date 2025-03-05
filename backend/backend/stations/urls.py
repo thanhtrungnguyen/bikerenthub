@@ -1,6 +1,8 @@
 from django.urls import path
 from .apis import StationListApi, StationDetailApi, StationUpdateBikeCountApi
 
+app_name = 'stations'
+
 urlpatterns = [
     path('', StationListApi.as_view(), name='station-list'),
     path('<uuid:station_id>/', StationDetailApi.as_view(), name='station-detail'),

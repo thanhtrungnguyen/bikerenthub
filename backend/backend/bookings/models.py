@@ -23,7 +23,6 @@ class Booking(BaseModel):
 
 class Payment(BaseModel):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('completed', 'Completed'), ('failed', 'Failed')])
     transaction_id = models.CharField(max_length=100, unique=True)
