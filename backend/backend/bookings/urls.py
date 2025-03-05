@@ -5,7 +5,7 @@ app_name = 'bookings'
 
 urlpatterns = [
     path('', BookingListApi.as_view(), name='booking-list'),
-    path('<uuid:booking_id>/', BookingDetailApi.as_view(), name='booking-detail'),
+    path('<int:booking_id>/', BookingDetailApi.as_view(), name='booking-detail'),
     path('create/', BookingCreateApi.as_view(), name='booking-create'),
-    path('<uuid:booking_id>/complete/', BookingCompleteApi.as_view(), name='booking-complete'),
+    path('<int:booking_id>/complete/', BookingCompleteApi.as_view(), name='booking-complete'),
 ]

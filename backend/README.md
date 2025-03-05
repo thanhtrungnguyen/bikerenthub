@@ -95,3 +95,8 @@ The following details how to deploy this application.
 ### Docker
 
 See detailed [cookiecutter-django Docker documentation](https://cookiecutter-django.readthedocs.io/en/latest/3-deployment/deployment-with-docker.html).
+
+
+http://localhost:8000/admin/
+http://localhost:8025/
+http://localhost:8000/api/docs/
