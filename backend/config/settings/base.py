@@ -87,7 +87,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "backend.users",
-    # Your stuff: custom apps go here
+    # common apps
     "backend.core",
     "backend.common",
     "backend.files",
@@ -95,8 +95,14 @@ LOCAL_APPS = [
     "backend.errors",
     "backend.authentication",
     "backend.api",
-
+    # domains apps
     "backend.bikes",
+    "backend.stations",
+    "backend.bookings",
+    "backend.pricing",
+    "backend.maintenance",
+    "backend.security",
+    "backend.payments",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
