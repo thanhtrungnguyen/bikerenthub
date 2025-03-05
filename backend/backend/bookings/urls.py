@@ -1,6 +1,8 @@
 from django.urls import path
 from .apis import BookingListApi, BookingDetailApi, BookingCreateApi, BookingCompleteApi
 
+app_name = 'bookings'
+
 urlpatterns = [
     path('', BookingListApi.as_view(), name='booking-list'),
     path('<uuid:booking_id>/', BookingDetailApi.as_view(), name='booking-detail'),

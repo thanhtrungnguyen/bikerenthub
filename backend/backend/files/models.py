@@ -25,7 +25,7 @@ class File(BaseModel):
     @property
     def is_valid(self):
         """
-        We consider a file "valid" if the the datetime flag has value.
+        We consider a file "valid" if the datetime flag has value.
         """
         return bool(self.upload_finished_at)
 
