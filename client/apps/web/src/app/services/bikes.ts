@@ -12,13 +12,17 @@ export class BikeService {
     const response = await fetch(this.baseUrl, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
     });
 
     if (!response.ok) {
+      if (response.status === 403) {
+        window.location.href = '/login';
+        return [];
+      }
       throw new Error('Failed to fetch bikes');
     }
     const allBikes: Bike[] = await response.json();
-    // Filter bikes by station_id
     return allBikes.filter((bike) => bike.station_id === stationId);
   }
 }

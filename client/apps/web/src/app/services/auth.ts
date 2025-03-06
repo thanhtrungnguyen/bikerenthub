@@ -2,11 +2,16 @@
 import { apiUrl } from '../../environment/apiurl';
 import { User } from '../models/user';
 
+export interface LoginResponse {
+  pk: number;
+  token: string;
+}
+
 export class AuthService {
 
   constructor(private url: string = `${apiUrl}/auth`) {}
 
-  async login(email: string, password: string): Promise<string> {
+  async login(email: string, password: string): Promise<LoginResponse> {
     const response = await fetch(`${this.url}/jwt/login/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -22,22 +27,22 @@ export class AuthService {
     return jwt;
   };
 
-  async getCurrentUser(jwt: string): Promise<User> {
+  async getCurrentUser(): Promise<User> {
     const response = await fetch(`${this.url}/me/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'accept': '*/*',
-        'Authorization': `Bearer ${jwt}`,
+        accept: '*/*',
       },
+      credentials: 'include',
     });
-
     if (!response.ok) {
+      if (response.status === 403) {
+        window.location.href = '/login';
+        return {} as User;
+      }
       throw new Error('Failed to fetch user data');
     }
-
-    // Assuming the backend returns the user data directly as JSON
-    const data = await response.json();
-    return data;
+    return response.json();
   }
 }
