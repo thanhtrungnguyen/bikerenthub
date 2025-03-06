@@ -1,7 +1,6 @@
 // apps/your-app/src/app/components/Login.tsx
 import React, { useState } from 'react';
 import { AuthService } from '../services/auth';
-import Cookies from 'js-cookie';
 
 const authService = new AuthService();
 
@@ -15,13 +14,13 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      // Call the login service; it returns an object with pk and token
+      // Call the login service and receive the pk and token
       const { pk, token } = await authService.login(email, password);
-
-      // Set the JWT as a cookie; adjust the options (expires, secure, sameSite) as needed
-      Cookies.set('token', token, { expires: 7, secure: false, sameSite: 'lax' });
       
-      // Redirect to dashboard
+      // Save the token in localStorage for later authenticated requests
+      localStorage.setItem('token', token);
+
+      // Redirect to the dashboard after successful login
       window.location.href = '/dashboard';
     } catch (err: any) {
       setError(err.message || 'Something went wrong');

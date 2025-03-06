@@ -8,15 +8,23 @@ export class BikeService {
     this.baseUrl = baseUrl;
   }
 
+  private getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   async getBikesForStation(stationId: number): Promise<Bike[]> {
+    const token = this.getToken();
     const response = await fetch(this.baseUrl, {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
     });
 
     if (!response.ok) {
-      if (response.status === 403) {
+      if (response.status === 403 || response.status === 401) {
+        localStorage.removeItem('token');
         window.location.href = '/login';
         return [];
       }
