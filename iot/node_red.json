@@ -1,0 +1,537 @@
+[
+    {
+        "id": "8b2956358d0e3386",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e65223ff0d0a8306",
+        "type": "inject",
+        "z": "8b2956358d0e3386",
+        "name": "Giao dịch thuê xe",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "borrowed",
+        "payloadType": "str",
+        "x": 340,
+        "y": 178.8888888888889,
+        "wires": [
+            [
+                "d9ad91bca89be284"
+            ]
+        ]
+    },
+    {
+        "id": "d9ad91bca89be284",
+        "type": "function",
+        "z": "8b2956358d0e3386",
+        "name": "Format JSON giao dịch",
+        "func": "// Nếu muốn gửi thông điệp cho xe cụ thể, bạn có thể đặt bikeId tại đây\n// Ví dụ, để gửi cho xe bike001:\nvar bikeId = \"bike001\"; \n\n// Nếu cần, có thể lấy thông tin này từ UI hoặc truyền dưới dạng msg.topic\nvar status = msg.payload;\nvar timestamp = new Date().toISOString();\n\nmsg.payload = {\n    bikeId: bikeId,\n    status: status,\n    time: timestamp\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 618.3333333333333,
+        "y": 196.66666666666669,
+        "wires": [
+            [
+                "d62e7eb5d7f4203d",
+                "96025a128750b8dc"
+            ]
+        ]
+    },
+    {
+        "id": "d62e7eb5d7f4203d",
+        "type": "mqtt out",
+        "z": "8b2956358d0e3386",
+        "name": "Gửi giao dịch đến MQTT",
+        "topic": "bike/status",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "654ce3377550f09a",
+        "x": 878.3333333333333,
+        "y": 326.66666666666663,
+        "wires": []
+    },
+    {
+        "id": "96025a128750b8dc",
+        "type": "debug",
+        "z": "8b2956358d0e3386",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 828.3333333333333,
+        "y": 136.66666666666669,
+        "wires": []
+    },
+    {
+        "id": "7c7ed6a6c74c0ef2",
+        "type": "inject",
+        "z": "8b2956358d0e3386",
+        "name": "Tắt",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "off",
+        "payloadType": "str",
+        "x": 358.3333333333333,
+        "y": 296.6666666666667,
+        "wires": [
+            [
+                "d9ad91bca89be284"
+            ]
+        ]
+    },
+    {
+        "id": "46b2ac7af2d35d62",
+        "type": "inject",
+        "z": "8b2956358d0e3386",
+        "name": "maintenance",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "maintenance",
+        "payloadType": "str",
+        "x": 350,
+        "y": 120,
+        "wires": [
+            [
+                "d9ad91bca89be284"
+            ]
+        ]
+    },
+    {
+        "id": "73f0ca786c1cb5d8",
+        "type": "inject",
+        "z": "8b2956358d0e3386",
+        "name": "Giao dịch trả xe",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "returned",
+        "payloadType": "str",
+        "x": 340,
+        "y": 237.7777777777778,
+        "wires": [
+            [
+                "d9ad91bca89be284"
+            ]
+        ]
+    },
+    {
+        "id": "8374ba4c80b46948",
+        "type": "inject",
+        "z": "8b2956358d0e3386",
+        "name": "Giao dịch thuê xe",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "borrowed",
+        "payloadType": "str",
+        "x": 340,
+        "y": 445.55555555555554,
+        "wires": [
+            [
+                "fff142b626cea822"
+            ]
+        ]
+    },
+    {
+        "id": "fff142b626cea822",
+        "type": "function",
+        "z": "8b2956358d0e3386",
+        "name": "Format JSON giao dịch",
+        "func": "// Nếu muốn gửi thông điệp cho xe cụ thể, bạn có thể đặt bikeId tại đây\n// Ví dụ, để gửi cho xe bike001:\nvar bikeId = \"bike002\"; \n\n// Nếu cần, có thể lấy thông tin này từ UI hoặc truyền dưới dạng msg.topic\nvar status = msg.payload;\nvar timestamp = new Date().toISOString();\n\nmsg.payload = {\n    bikeId: bikeId,\n    status: status,\n    time: timestamp\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 618.3333333333333,
+        "y": 456.66666666666663,
+        "wires": [
+            [
+                "8999a875a95780ec",
+                "d62e7eb5d7f4203d"
+            ]
+        ]
+    },
+    {
+        "id": "8999a875a95780ec",
+        "type": "debug",
+        "z": "8b2956358d0e3386",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "ee2b6fe0a224128c",
+        "type": "inject",
+        "z": "8b2956358d0e3386",
+        "name": "Tắt",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "off",
+        "payloadType": "str",
+        "x": 358.3333333333333,
+        "y": 576.6666666666667,
+        "wires": [
+            [
+                "fff142b626cea822"
+            ]
+        ]
+    },
+    {
+        "id": "fa8f46687e893b80",
+        "type": "inject",
+        "z": "8b2956358d0e3386",
+        "name": "maintenance",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "maintenance",
+        "payloadType": "str",
+        "x": 350,
+        "y": 380,
+        "wires": [
+            [
+                "fff142b626cea822"
+            ]
+        ]
+    },
+    {
+        "id": "56f091ae444ddd52",
+        "type": "inject",
+        "z": "8b2956358d0e3386",
+        "name": "Giao dịch trả xe",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "returned",
+        "payloadType": "str",
+        "x": 340,
+        "y": 511.1111111111111,
+        "wires": [
+            [
+                "fff142b626cea822"
+            ]
+        ]
+    },
+    {
+        "id": "e38c19e74b39b6dc",
+        "type": "http in",
+        "z": "8b2956358d0e3386",
+        "name": "",
+        "url": "/:bike_id/update-status/",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 240,
+        "y": 760,
+        "wires": [
+            [
+                "12f18d322650de14"
+            ]
+        ]
+    },
+    {
+        "id": "a6bcd437394c2b3e",
+        "type": "function",
+        "z": "8b2956358d0e3386",
+        "name": "Format gửi tin qua MQTT ",
+        "func": "// Lấy bike_id từ tham số URL (msg.req.params)\nif (!msg.req.params || !msg.req.params.bike_id) {\n    node.error(\"Thiếu bike_id trong URL\", msg);\n    return null;\n}\nvar bikeId = msg.req.params.bike_id; // bikeId từ URL, dạng chuỗi\n\n// Kiểm tra payload: web server gửi JSON có chứa trường \"status\"\nif (!msg.payload || !msg.payload.status) {\n    node.error(\"Thiếu trường 'status' trong payload\", msg);\n    return null;\n}\nvar status = msg.payload.status;\nvar timestamp = new Date().toISOString();\n\n// Tạo payload mới: chúng ta không cần gửi lại bikeId vì sẽ sử dụng topic phân cấp\nmsg.payload = {\n    status: status,\n    time: timestamp\n};\n\n// Đặt topic phân cấp: \"bike/status/<bikeId>\"\nmsg.topic = \"bike/status/\" + bikeId;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 760,
+        "wires": [
+            [
+                "05ed6e9fce6d1c5a",
+                "92651ab3a22fcb8f",
+                "0328c56197065718"
+            ]
+        ]
+    },
+    {
+        "id": "05ed6e9fce6d1c5a",
+        "type": "mqtt out",
+        "z": "8b2956358d0e3386",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "654ce3377550f09a",
+        "x": 810,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "0328c56197065718",
+        "type": "http response",
+        "z": "8b2956358d0e3386",
+        "name": "",
+        "statusCode": "msg.statusCode",
+        "headers": {},
+        "x": 900,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "92651ab3a22fcb8f",
+        "type": "debug",
+        "z": "8b2956358d0e3386",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 777.6666259765625,
+        "y": 897.6666259765625,
+        "wires": []
+    },
+    {
+        "id": "12f18d322650de14",
+        "type": "json",
+        "z": "8b2956358d0e3386",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 410,
+        "y": 700,
+        "wires": [
+            [
+                "a6bcd437394c2b3e"
+            ]
+        ]
+    },
+    {
+        "id": "29095acdf66a5fec",
+        "type": "http in",
+        "z": "8b2956358d0e3386",
+        "name": "",
+        "url": "/api/stations/slots/control/",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 290,
+        "y": 1100,
+        "wires": [
+            [
+                "d7ae281873b3404b"
+            ]
+        ]
+    },
+    {
+        "id": "7ca56e332e90005c",
+        "type": "function",
+        "z": "8b2956358d0e3386",
+        "name": "Format gửi tin qua MQTT ",
+        "func": "// Kiểm tra payload: web server gửi JSON có chứa trường \"command\"\nif (!msg.payload || !msg.payload.command) {\n    node.error(\"Thiếu trường 'command' trong payload\", msg);\n    msg.statusCode = 400; // Đặt status code lỗi\n    msg.payload = { error: \"Thiếu trường 'command' trong payload JSON\" }; // Payload lỗi (tùy chọn)\n    return msg; // Trả về msg để node http response xử lý\n}\n\nvar command = msg.payload.command;\n\n// Tạo payload mới: chỉ cần gửi command\nmsg.payload = {\n    command: command\n};\n\n// Topic cho command chỗ đỗ xe là \"parking/command\"\nmsg.topic = \"parking/command\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 1100,
+        "wires": [
+            [
+                "2f2bb57623ef785b",
+                "fc6bb0577129cabc",
+                "88b7757d4553aa53"
+            ]
+        ]
+    },
+    {
+        "id": "2f2bb57623ef785b",
+        "type": "mqtt out",
+        "z": "8b2956358d0e3386",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "654ce3377550f09a",
+        "x": 850,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "88b7757d4553aa53",
+        "type": "http response",
+        "z": "8b2956358d0e3386",
+        "name": "",
+        "statusCode": "msg.statusCode",
+        "headers": {},
+        "x": 940,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "fc6bb0577129cabc",
+        "type": "debug",
+        "z": "8b2956358d0e3386",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 817.6666259765625,
+        "y": 1237.6666259765625,
+        "wires": []
+    },
+    {
+        "id": "d7ae281873b3404b",
+        "type": "json",
+        "z": "8b2956358d0e3386",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 450,
+        "y": 1040,
+        "wires": [
+            [
+                "7ca56e332e90005c"
+            ]
+        ]
+    },
+    {
+        "id": "654ce3377550f09a",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "http://127.0.0.1",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
