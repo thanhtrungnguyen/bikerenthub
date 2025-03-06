@@ -8,7 +8,7 @@ from backend.stations.serializers import StationSerializer, StationCreateSeriali
 from django.http import Http404
 
 
-class StationListCreateApi(APIView):
+class StationListApi(APIView):
     """
     GET: List all stations.
     POST: Create a new station with ESP devices.
@@ -19,6 +19,7 @@ class StationListCreateApi(APIView):
         serializer = StationSerializer(stations, many=True)
         return Response(serializer.data)
 
+class StationCreateApi(APIView):
     def post(self, request) -> Response:
         serializer = StationCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -34,11 +35,7 @@ class StationListCreateApi(APIView):
         return Response(StationSerializer(station).data, status=status.HTTP_201_CREATED)
 
 
-class StationRetrieveUpdateApi(APIView):
-    """
-    GET: Retrieve station details.
-    PUT: Update station details (including capacity adjustment).
-    """
+class StationGetByIdApi(APIView):
 
     def get_object(self, station_id: int) -> Station:
         try:
@@ -46,10 +43,14 @@ class StationRetrieveUpdateApi(APIView):
         except Station.DoesNotExist:
             raise Http404("Station not found")
 
-    def get(self, request, station_id: int) -> Response:
-        station = self.get_object(station_id)
-        serializer = StationSerializer(station)
-        return Response(serializer.data)
+
+
+
+class StationRetrieveUpdateApi(APIView):
+    """
+    GET: Retrieve station details.
+    PUT: Update station details (including capacity adjustment).
+    """
 
     def put(self, request, station_id: int) -> Response:
         station = self.get_object(station_id)

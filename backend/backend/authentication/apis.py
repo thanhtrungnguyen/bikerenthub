@@ -1,79 +1,93 @@
-from django.conf import settings
-from django.contrib.auth import authenticate, login, logout
-from rest_framework import serializers, status
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_jwt.views import ObtainJSONWebTokenView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.conf import settings
+from backend.authentication.serializers import (
+    UserSerializer,
+    LoginSerializer,
+    RefreshSerializer,
+)
+from django.contrib.auth import authenticate
 
-from backend.api.mixins import ApiAuthMixin
-from backend.authentication.services import auth_logout
-from backend.users.selectors import user_get_login_data
 
-
-class UserSessionLoginApi(APIView):
+class CookieBasedLoginApi(APIView):
     """
-    Following https://docs.djangoproject.com/en/3.1/topics/auth/default/#how-to-log-a-user-in
+    Login API that returns access token in response and refresh token in HttpOnly cookie.
     """
 
-    class InputSerializer(serializers.Serializer):
-        email = serializers.EmailField()
-        password = serializers.CharField()
+    authentication_classes = []  # Important - No auth required for login
+    permission_classes = []      # Important - Public access to login
 
     def post(self, request):
-        serializer = self.InputSerializer(data=request.data)
+        serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         user = authenticate(request, **serializer.validated_data)
 
         if user is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        login(request, user)
+        if not user.is_active:
+            return Response({"error": "User account is inactive"}, status=status.HTTP_403_FORBIDDEN)
 
-        data = user_get_login_data(user=user)
-        session_key = request.session.session_key
+        refresh = RefreshToken.for_user(user)
 
-        return Response({"session": session_key, "data": data})
+        response = Response({
+            "access": str(refresh.access_token),
+        })
 
-
-class UserSessionLogoutApi(APIView):
-    def get(self, request):
-        logout(request)
-
-        return Response()
-
-    def post(self, request):
-        logout(request)
-
-        return Response()
-
-
-class UserJwtLoginApi(ObtainJSONWebTokenView):
-    def post(self, request, *args, **kwargs):
-        # We are redefining post so we can change the response status on success
-        # Mostly for consistency with the session-based API
-        response = super().post(request, *args, **kwargs)
-
-        if response.status_code == status.HTTP_201_CREATED:
-            response.status_code = status.HTTP_200_OK
+        response.set_cookie(
+            settings.SIMPLE_JWT["AUTH_COOKIE"],
+            str(refresh),
+            httponly=settings.SIMPLE_JWT.get("AUTH_COOKIE_HTTP_ONLY", True),
+            samesite=settings.SIMPLE_JWT.get("AUTH_COOKIE_SAMESITE", "Lax"),
+            secure=settings.SIMPLE_JWT.get("AUTH_COOKIE_SECURE", False),
+            path="/api/auth/refresh/"
+        )
 
         return response
 
 
-class UserJwtLogoutApi(ApiAuthMixin, APIView):
+class CookieBasedTokenRefreshApi(APIView):
+    """
+    Refresh access token using HttpOnly cookie.
+    """
+
     def post(self, request):
-        auth_logout(request.user)
+        serializer = RefreshSerializer(data=request.COOKIES)
+        serializer.is_valid(raise_exception=True)
 
-        response = Response()
+        refresh_token = serializer.validated_data["refresh_token"]
 
-        if settings.JWT_AUTH["JWT_AUTH_COOKIE"] is not None:
-            response.delete_cookie(settings.JWT_AUTH["JWT_AUTH_COOKIE"])
+        try:
+            refresh = RefreshToken(refresh_token)
+            access_token = str(refresh.access_token)
+            return Response({"access": access_token})
+        except Exception:
+            return Response({"error": "Invalid or expired refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+class CookieBasedLogoutApi(APIView):
+    """
+    Clear refresh token cookie (logout).
+    """
+
+    def post(self, request):
+        response = Response({"detail": "Logged out"})
+        response.delete_cookie(settings.SIMPLE_JWT["AUTH_COOKIE"])
         return response
 
 
-class UserMeApi(ApiAuthMixin, APIView):
-    def get(self, request):
-        data = user_get_login_data(user=request.user)
+class CurrentUserApi(APIView):
+    """
+    Get current logged-in user profile.
+    """
 
-        return Response(data)
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

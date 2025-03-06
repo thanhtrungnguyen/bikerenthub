@@ -1,39 +1,16 @@
-from django.urls import include, path
-
-from .apis import (
-    UserJwtLoginApi,
-    UserJwtLogoutApi,
-    UserMeApi,
-    UserSessionLoginApi,
-    UserSessionLogoutApi,
+from django.urls import path
+from backend.authentication.apis import (
+    CookieBasedLoginApi,
+    CookieBasedTokenRefreshApi,
+    CookieBasedLogoutApi,
+    CurrentUserApi
 )
 
-app_name = "authentication"
+app_name = 'authentication'
 
 urlpatterns = [
-    path(
-        "session/",
-        include(
-            (
-                [
-                    path("login/", UserSessionLoginApi.as_view(), name="login"),
-                    path("logout/", UserSessionLogoutApi.as_view(), name="logout"),
-                ],
-                "session",
-            )
-        ),
-    ),
-    path(
-        "jwt/",
-        include(
-            (
-                [
-                    path("login/", UserJwtLoginApi.as_view(), name="login"),
-                    path("logout/", UserJwtLogoutApi.as_view(), name="logout"),
-                ],
-                "jwt",
-            )
-        ),
-    ),
-    path("me/", UserMeApi.as_view(), name="me"),
+    path("login/", CookieBasedLoginApi.as_view(), name="cookie_login"),
+    path("refresh/", CookieBasedTokenRefreshApi.as_view(), name="cookie_refresh"),
+    path("logout/", CookieBasedLogoutApi.as_view(), name="cookie_logout"),
+    path("me/", CurrentUserApi.as_view(), name="current_user"),
 ]

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import auth
 from rest_framework.authentication import BaseAuthentication, SessionAuthentication
 from rest_framework.permissions import BasePermission, IsAuthenticated
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 def get_auth_header(headers):
@@ -57,7 +57,7 @@ class CsrfExemptedSessionAuthentication(SessionAuthentication):
     """
 
     def enforce_csrf(self, request):
-        return
+        pass
 
 
 if TYPE_CHECKING:
@@ -71,9 +71,16 @@ else:
 
 
 class ApiAuthMixin:
+    """
+    Mixin to apply the correct authentication classes to APIs.
+    This now supports:
+    - JWT Bearer Authentication (Simple JWT)
+    - Session authentication (useful for web-based tools or admin panels)
+    """
+
     authentication_classes: Sequence[Type[BaseAuthentication]] = [
         CsrfExemptedSessionAuthentication,
         SessionAsHeaderAuthentication,
-        JSONWebTokenAuthentication,
+        JWTAuthentication,  # Use Simple JWT instead of deprecated rest_framework_jwt
     ]
     permission_classes: PermissionClassesType = (IsAuthenticated,)
