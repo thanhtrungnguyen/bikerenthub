@@ -377,6 +377,27 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",
 ]
 
+# Allow typical headers needed in requests (customize if needed)
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "accept",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
+# Allow all the HTTP methods you want
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS"
+]
+
 # By Default swagger ui is available only to admin user(s). You can change permission classes to change that
 # See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
 # SPECTACULAR_SETTINGS = {
@@ -392,8 +413,9 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Documentation of API endpoints of BikeRentHub",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": True,
-    "SERVE_PERMISSIONS": [],  # Disable permissions on schema endpoint
-    "SERVE_AUTHENTICATION": [],  # Disable authentication on schema endpoint
+    "SERVE_PERMISSIONS": [],  # Allow unauthenticated access to schema
+    "SERVE_AUTHENTICATION": [],  # No auth required for schema
+    "SCHEMA_PATH_PREFIX": "/api/",  # Adjust if needed
     "SWAGGER_UI_SETTINGS": {
         "persistAuthorization": True,
     },
