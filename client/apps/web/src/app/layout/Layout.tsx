@@ -12,6 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { format } from 'date-fns';
 import Avatar from '@material-ui/core/Avatar';
 import { ReactNode } from 'react';
+import useAuth from '../hooks/useAuth';
 
 const drawerWidth = 240;
 
@@ -56,6 +57,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { auth } = useAuth();
+
   const menuItems = [
     {
       text: 'Dashboard',
@@ -82,7 +85,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Typography className={classes.date}>
             {format(new Date(), 'yyyy-MM-dd')}
           </Typography>
-          <Typography>Mario</Typography>
+          <Typography>{auth?.user?.name}</Typography>
           <Avatar className={classes.avatar} src="/mario-av.png" />
         </Toolbar>
       </AppBar>

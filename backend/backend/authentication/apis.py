@@ -35,6 +35,7 @@ class CookieBasedLoginApi(APIView):
         refresh = RefreshToken.for_user(user)
 
         response = Response({
+            "user": UserSerializer(user).data,
             "access": str(refresh.access_token),
         })
 

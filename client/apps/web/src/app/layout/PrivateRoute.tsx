@@ -5,6 +5,7 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
   const { auth } = useAuth();
 
   if (!auth?.user) {
+    console.log('PrivateRoute: ', auth);
     return <Navigate to="/login" />;
   }
 

@@ -1,27 +1,27 @@
-import { useEffect, useState } from "react";
-  import useAxiosPrivate from "./useAxiosPrivate";
+import { useEffect, useState } from 'react';
+import useAxiosPrivate from './useAxiosPrivate';
 
-  export const useAxios = (url: string, payload: unknown) => {
-    const axios = useAxiosPrivate();
-    const [loading, setLoading] = useState(true);
-    const [data, setData] = useState();
-    const [error, setError] = useState();
-    useEffect(() => {
-      const controller = new AbortController();
-      setLoading(true);
-      axios
-        .post(url, payload, { signal: controller.signal })
-        .then((res) => {
-          setData(res.data);
-        })
-        .catch((err) => setError(err))
-        .finally(() => {
-          setLoading(false);
-        });
-      return () => {
-        controller.abort();
-      };
-    }, [url]);
+export const useAxios = (url: string, payload: unknown) => {
+  const axios = useAxiosPrivate();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState();
+  const [error, setError] = useState();
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    axios
+      .post(url, payload, { signal: controller.signal })
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => setError(err))
+      .finally(() => {
+        setLoading(false);
+      });
+    return () => {
+      controller.abort();
+    };
+  }, [url]);
 
-    return { loading, data, error };
-  };
+  return { loading, data, error };
+};

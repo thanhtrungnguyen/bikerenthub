@@ -13,6 +13,11 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 
+import axios from '../api/axios';
+import { StatusCodes } from 'http-status-codes';
+import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+
 // Helper component for copyright info
 function Copyright() {
   return (
@@ -52,7 +57,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   const classes = useStyles();
 
-  const handleSubmit = (event) => {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = (event: {
+    preventDefault: () => void;
+    currentTarget: HTMLFormElement | undefined;
+  }) => {
     event.preventDefault();
     // Access form data
     const data = new FormData(event.currentTarget);
@@ -60,6 +71,33 @@ export default function Login() {
     const password = data.get('password');
     console.log({ email, password });
     // Implement your authentication logic here
+
+    axios
+      .post(
+        '/auth/login/',
+        { email, password },
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        switch (response.status) {
+          case StatusCodes.OK:
+            const user: unknown = response.data.user;
+            const accessToken: string = response.data.access;
+            setAuth({ user, accessToken });
+
+            navigate('/contact');
+            break;
+
+          default:
+            break;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
