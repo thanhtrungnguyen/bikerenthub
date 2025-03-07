@@ -34,6 +34,7 @@
     "@testing-library/react": "16.1.0",
     "@testing-library/react-native": "~12.9.0",
     "@types/jest": "^29.5.12",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "18.16.9",
     "@types/react": "~18.3.12",
     "@types/react-dom": "~18.3.1",
@@ -74,6 +75,7 @@
     "vitest": "^1.3.1"
   },
   "dependencies": {
+    "js-cookie": "^3.0.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "~0.76.3",
