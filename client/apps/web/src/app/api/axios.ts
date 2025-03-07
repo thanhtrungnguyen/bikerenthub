@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { apiUrl } from '../../environment/apiurl';
 
-export const BASE_URL: string = process.env.REACT_APP_BASE_URL || "";
+export const BASE_URL: string = apiUrl || "";
 
 export default axios.create({
   baseURL: `${BASE_URL}/api`,

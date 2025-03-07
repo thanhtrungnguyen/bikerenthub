@@ -1,37 +1,54 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core';
+import { createTheme } from '@material-ui/core/styles';
+import { purple } from '@material-ui/core/colors';
+import Layout from './layout/Layout';
 import Dashboard from './pages/Dashboard';
-import RequireAuth from './pages/AuthFilter';
-import Login from './pages/Login';
-import StationDetail from './pages/StationDetail';
+import Contact from './pages/Contact';
+import PrivateRoute from './layout/PrivateRoute';
+import Login from './auth/Login';
+import { AuthProvider } from './context/AuthProvider';
 
-export function App() {
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#fefefe',
+    },
+    secondary: purple,
+  },
+  typography: {
+    fontFamily: 'Quicksand',
+    fontWeightLight: 400,
+    fontWeightRegular: 500,
+    fontWeightMedium: 600,
+    fontWeightBold: 700,
+  },
+});
+
+function App() {
   return (
-    <Routes>
-      {/* Redirect the root path to the dashboard if authenticated,
-        or to login if not */}
-      <Route path="/" element={<Navigate replace to="/dashboard" />} />
-
-      {/* Public route for login */}
-      <Route path="/login" element={<Login />} />
-
-      {/* Protected routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <RequireAuth>
-            <Dashboard />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/stations/:stationId"
-        element={
-          <RequireAuth>
-            <StationDetail />
-          </RequireAuth>
-        }
-      />
-    </Routes>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/*"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/contact" element={<Contact />} />
+                    </Routes>
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
   );
 }
 

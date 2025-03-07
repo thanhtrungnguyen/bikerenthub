@@ -1,10 +1,10 @@
 // apps/your-app/src/app/components/StationDetail.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Station } from '../models/station';
-import { Bike } from '../models/bike';
-import { BikeService } from '../services/bikes';
-import { StationService } from '../services/stations';
+import { Station } from '../../models/station';
+import { Bike } from '../../models/bike';
+import { BikeService } from '../../services/bikes';
+import { StationService } from '../../services/stations';
 
 const stationService = new StationService();
 const bikeService = new BikeService();
