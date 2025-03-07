@@ -504,6 +504,146 @@
         ]
     },
     {
+        "id": "your_mqtt_in_station_id_request_node_id",
+        "type": "mqtt in",
+        "z": "8b2956358d0e3386",
+        "name": "MQTT In - Station ID Request",
+        "topic": "station/request_id",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "your_mqtt_broker_config_rpi_id",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 1420,
+        "wires": [
+            [
+                "your_function_assign_station_id_node_id"
+            ]
+        ]
+    },
+    {
+        "id": "your_function_assign_station_id_node_id",
+        "type": "function",
+        "z": "8b2956358d0e3386",
+        "name": "Assign Station ID",
+        "func": "const espChipId = msg.payload.toString(); // ChipId from NodeMCU request\n\n// **CHỈNH SỬA ĐÂY: Logic gán stationId cho từng ChipId**\n// ***Ví dụ đơn giản: Map ChipId cuối cùng tới Station ID***\nlet stationId;\nconst lastDigitChipId = espChipId.slice(-1); // Lấy chữ số cuối của ChipId\nstationId = parseInt(lastDigitChipId, 16); // Convert hex digit to integer (0-15)\nstationId = stationId % 5 + 1; // Map to station ID 1-5 (ví dụ)\nstationId = 1;\n// **LƯU Ý QUAN TRỌNG:**\n// Trong thực tế, bạn cần có logic quản lý stationId phức tạp hơn.\n// Ví dụ:\n// - Đọc mapping từ database, file cấu hình, hoặc biến môi trường.\n// - Đảm bảo mỗi ChipId được gán một stationId duy nhất và nhất quán.\n// - Xử lý trường hợp không tìm thấy ChipId trong mapping (lỗi, gán mặc định, ...).\n\nmsg.payload = stationId.toString(); // Payload là stationId (dạng string)\nmsg.topic = \"station/id/\" + espChipId; // Topic phản hồi dựa trên ChipId\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 1420,
+        "wires": [
+            [
+                "your_mqtt_out_station_id_response_node_id"
+            ]
+        ]
+    },
+    {
+        "id": "your_mqtt_out_station_id_response_node_id",
+        "type": "mqtt out",
+        "z": "8b2956358d0e3386",
+        "name": "MQTT Out - Station ID Response",
+        "topic": "",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "json",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "your_mqtt_broker_config_rpi_id",
+        "x": 700,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "38bed5e35de2eaa9",
+        "type": "function",
+        "z": "8b2956358d0e3386",
+        "name": "Format gửi tin qua MQTT ",
+        "func": "const payloadMQTT = msg.payload; // Payload từ tin nhắn MQTT 'rpi/parking_slot_event'\n\nconst stationId = 1;\n// const stationId = payloadMQTT.station_id; // Lấy station_id từ payload MQTT\nconst slotNumber = payloadMQTT.slot_id; // Lấy slot_id từ payload MQTT\n// const bikeId = payloadMQTT.bike_id;  // Lấy bike_id từ payload MQTT (nếu cần)\n\n// **Tạo payload HTTP request gửi lên backend**\nmsg.payload = {\n    station_id: stationId,\n    slot_number: slotNumber,\n    // bike_id: bikeId, // Gửi bike_id lên backend nếu cần\n    event: payloadMQTT.event // Gửi event type lên backend nếu cần\n    // ... (thêm các trường khác cần gửi lên backend API của bạn) ...\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 1620,
+        "wires": [
+            [
+                "f2a78b23456789ab",
+                "de47b95ed73452c5"
+            ]
+        ]
+    },
+    {
+        "id": "de47b95ed73452c5",
+        "type": "debug",
+        "z": "8b2956358d0e3386",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 737.6666259765625,
+        "y": 1757.6666259765625,
+        "wires": []
+    },
+    {
+        "id": "be509978d38711e8",
+        "type": "mqtt in",
+        "z": "8b2956358d0e3386",
+        "name": "MQTT In - Station ID Request",
+        "topic": "station/request_id",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "your_mqtt_broker_config_rpi_id",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 1620,
+        "wires": [
+            [
+                "38bed5e35de2eaa9"
+            ]
+        ]
+    },
+    {
+        "id": "f2a78b23456789ab",
+        "type": "http request",
+        "z": "8b2956358d0e3386",
+        "name": "Gửi Yêu Cầu Trả Xe Lên Backend",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://example.com/api/return-bike",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 900,
+        "y": 1620,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "654ce3377550f09a",
         "type": "mqtt-broker",
         "name": "",
@@ -533,5 +673,32 @@
         "willMsg": {},
         "userProps": "",
         "sessionExpiry": ""
+    },
+    {
+        "id": "your_mqtt_broker_config_rpi_id",
+        "type": "mqtt-broker",
+        "z": "8b2956358d0e3386",
+        "name": "MQTT Broker",
+        "broker": "192.168.137.244",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": {},
+        "sessionExpiry": 0
     }
 ]
