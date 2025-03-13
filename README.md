@@ -1,2 +1,2 @@
-# helmet-sense
-HelmetSense System
+# bike-rent-hub
+BikeRentHub System
